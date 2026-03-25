@@ -7,16 +7,6 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/vector"
 )
 
-type Position struct {
-	X int
-	Y int
-}
-
-type Size struct {
-	X int
-	Y int
-}
-
 type Player struct {
 	Position
 	Size
