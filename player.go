@@ -8,8 +8,8 @@ import (
 )
 
 type Player struct {
-	Position
-	Size
+	Position Vector2
+	Size     Vector2
 }
 
 func (p *Player) draw(screen *ebiten.Image) {

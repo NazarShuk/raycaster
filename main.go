@@ -9,6 +9,7 @@ import (
 type Game struct {
 	Player
 	Walls []Wall
+	Raycaster
 }
 
 var game = &Game{}
@@ -16,6 +17,7 @@ var game = &Game{}
 func (g *Game) Update() error {
 
 	g.Player.update()
+	g.Raycaster.update()
 
 	return nil
 }
@@ -26,6 +28,8 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	for i := 0; i < len(game.Walls); i++ {
 		game.Walls[i].draw(screen)
 	}
+
+	g.Raycaster.draw(screen)
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
@@ -47,43 +51,43 @@ func main() {
 
 func createWalls() {
 	game.Walls = append(game.Walls, Wall{
-		Position: Position{
+		Position: Vector2{
 			X: 0,
 			Y: 0,
 		},
-		Size: Size{
+		Size: Vector2{
 			X: 640,
 			Y: 32,
 		},
 	})
 	game.Walls = append(game.Walls, Wall{
-		Position: Position{
+		Position: Vector2{
 			X: 0,
 			Y: 0,
 		},
-		Size: Size{
+		Size: Vector2{
 			X: 32,
 			Y: 480,
 		},
 	})
 
 	game.Walls = append(game.Walls, Wall{
-		Position: Position{
+		Position: Vector2{
 			X: 0,
 			Y: 240 - 32,
 		},
-		Size: Size{
+		Size: Vector2{
 			X: 640,
 			Y: 32,
 		},
 	})
 
 	game.Walls = append(game.Walls, Wall{
-		Position: Position{
+		Position: Vector2{
 			X: 320 - 32,
 			Y: 0,
 		},
-		Size: Size{
+		Size: Vector2{
 			X: 32,
 			Y: 480,
 		},

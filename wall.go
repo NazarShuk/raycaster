@@ -8,8 +8,8 @@ import (
 )
 
 type Wall struct {
-	Position
-	Size
+	Position Vector2
+	Size     Vector2
 }
 
 func (w *Wall) draw(screen *ebiten.Image) {
