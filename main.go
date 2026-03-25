@@ -49,7 +49,7 @@ func main() {
 	createWalls()
 
 	ebiten.SetWindowSize(640, 480)
-	ebiten.SetWindowTitle("Hello, World!")
+	ebiten.SetWindowTitle("Game")
 	if err := ebiten.RunGame(game); err != nil {
 		log.Fatal(err)
 	}

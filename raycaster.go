@@ -1,34 +1,48 @@
 package main
 
 import (
+	"fmt"
 	"image/color"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/vector"
 )
 
 type Raycaster struct {
-	Position Vector2
-	FOV      int
+	Position  Vector2
+	FOV       int
+	direction float32
 }
 
 func (r *Raycaster) update() {
 	r.Position = game.Player.Position
-
+	if ebiten.IsKeyPressed(ebiten.KeyArrowLeft) {
+		r.direction -= 1
+	}
+	if ebiten.IsKeyPressed(ebiten.KeyArrowRight) {
+		r.direction += 1
+	}
 }
 
 func (r *Raycaster) draw(screen *ebiten.Image) {
 	//wg := sync.WaitGroup{}
+
+	ebitenutil.DebugPrint(screen, fmt.Sprintf("%v", r.direction))
 
 	for x := 0; x < game.FOV; x++ {
 
 		//wg.Go(func() {
 		progress := float32(x) / float32(game.FOV)
 
-		distance := sendRay(r.Position, Vector2{
+		dir := Vector2{
 			X: (progress - 0.5) * 2,
 			Y: -1,
-		}, screen)
+		}
+
+		dir = rotate(dir, r.direction)
+
+		distance := sendRay(r.Position, dir, screen)
 
 		ySize := float32(4000) / float32(distance)
 
