@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -23,13 +24,15 @@ func (g *Game) Update() error {
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	g.Player.draw(screen)
+	//g.Player.draw(screen)
 
 	for i := 0; i < len(game.Walls); i++ {
-		game.Walls[i].draw(screen)
+		//game.Walls[i].draw(screen)
 	}
 
 	g.Raycaster.draw(screen)
+
+	fmt.Println(ebiten.ActualFPS())
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
@@ -39,6 +42,9 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeigh
 func main() {
 	game.Player.Size.X = 16
 	game.Player.Size.Y = 16
+	game.Player.Position.X = 320 / 2
+	game.Player.Position.Y = 240 / 2
+	game.FOV = 120
 
 	createWalls()
 
