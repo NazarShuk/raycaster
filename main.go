@@ -92,4 +92,15 @@ func createWalls() {
 			Y: 480,
 		},
 	})
+
+	game.Walls = append(game.Walls, Wall{
+		Position: Vector2{
+			X: 100,
+			Y: 50,
+		},
+		Size: Vector2{
+			X: 48,
+			Y: 48,
+		},
+	})
 }
