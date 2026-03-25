@@ -8,7 +8,10 @@ import (
 
 type Game struct {
 	Player
+	Walls []Wall
 }
+
+var game = &Game{}
 
 func (g *Game) Update() error {
 
@@ -19,6 +22,10 @@ func (g *Game) Update() error {
 
 func (g *Game) Draw(screen *ebiten.Image) {
 	g.Player.draw(screen)
+
+	for i := 0; i < len(game.Walls); i++ {
+		game.Walls[i].draw(screen)
+	}
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
@@ -26,13 +33,59 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeigh
 }
 
 func main() {
-	game := &Game{}
 	game.Player.Size.X = 16
 	game.Player.Size.Y = 16
+
+	createWalls()
 
 	ebiten.SetWindowSize(640, 480)
 	ebiten.SetWindowTitle("Hello, World!")
 	if err := ebiten.RunGame(game); err != nil {
 		log.Fatal(err)
 	}
+}
+
+func createWalls() {
+	game.Walls = append(game.Walls, Wall{
+		Position: Position{
+			X: 0,
+			Y: 0,
+		},
+		Size: Size{
+			X: 640,
+			Y: 32,
+		},
+	})
+	game.Walls = append(game.Walls, Wall{
+		Position: Position{
+			X: 0,
+			Y: 0,
+		},
+		Size: Size{
+			X: 32,
+			Y: 480,
+		},
+	})
+
+	game.Walls = append(game.Walls, Wall{
+		Position: Position{
+			X: 0,
+			Y: 240 - 32,
+		},
+		Size: Size{
+			X: 640,
+			Y: 32,
+		},
+	})
+
+	game.Walls = append(game.Walls, Wall{
+		Position: Position{
+			X: 320 - 32,
+			Y: 0,
+		},
+		Size: Size{
+			X: 32,
+			Y: 480,
+		},
+	})
 }

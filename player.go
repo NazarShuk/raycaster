@@ -23,7 +23,7 @@ type Player struct {
 }
 
 func (p *Player) draw(screen *ebiten.Image) {
-	vector.FillRect(screen, float32(p.Position.X), float32(p.Position.Y), float32(p.Size.X), float32(p.Size.Y), color.RGBA{255, 255, 255, 0}, true)
+	vector.FillRect(screen, float32(p.Position.X), float32(p.Position.Y), float32(p.Size.X), float32(p.Size.Y), color.RGBA{255, 255, 255, 255}, true)
 }
 
 func (p *Player) update() {
