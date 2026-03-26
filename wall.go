@@ -8,8 +8,6 @@ type Wall struct {
 	BaseEntity
 	Position Vector2
 	Size     Vector2
-
-	WallImage *ebiten.Image
 }
 
 func (w *Wall) Draw(screen *ebiten.Image) {
