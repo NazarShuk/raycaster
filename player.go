@@ -10,6 +10,9 @@ type Player struct {
 	Position  Vector2
 	Size      Vector2
 	Direction float32
+
+	lastCursorPosX int
+	lastCursorPosY int
 }
 
 func (p *Player) Start() {
@@ -23,12 +26,14 @@ func (p *Player) Draw(screen *ebiten.Image) {
 
 func (p *Player) Update() {
 
-	if ebiten.IsKeyPressed(ebiten.KeyArrowLeft) {
-		p.Direction -= 1
-	}
-	if ebiten.IsKeyPressed(ebiten.KeyArrowRight) {
-		p.Direction += 1
-	}
+	x, y := ebiten.CursorPosition()
+	xDiff := x - p.lastCursorPosX
+	//yDiff := y - p.lastCursorPosY
+
+	p.lastCursorPosX = x
+	p.lastCursorPosY = y
+
+	p.Direction += float32(xDiff)
 
 	movementChange := Vector2{}
 

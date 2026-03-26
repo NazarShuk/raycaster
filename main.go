@@ -42,6 +42,8 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeigh
 
 func main() {
 
+	ebiten.SetCursorMode(ebiten.CursorModeCaptured)
+
 	player := &Player{}
 
 	player.Size.X = 16
