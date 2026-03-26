@@ -116,4 +116,8 @@ func createWalls() {
 			Y: 48,
 		},
 	})
+
+	for _, wall := range game.Walls {
+		spawnEntity(&wall)
+	}
 }
