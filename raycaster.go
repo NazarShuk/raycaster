@@ -10,21 +10,14 @@ import (
 )
 
 type Raycaster struct {
-	Position  Vector2
-	FOV       int
-	direction float32
+	BaseEntity
+	Player *Player
 }
 
-func (r *Raycaster) update() {
-	r.Position = game.Player.Position
-	r.direction = game.Player.Direction
-
-}
-
-func (r *Raycaster) draw(screen *ebiten.Image) {
+func (r *Raycaster) Draw(screen *ebiten.Image) {
 	//wg := sync.WaitGroup{}
 
-	ebitenutil.DebugPrint(screen, fmt.Sprintf("%v", r.direction))
+	ebitenutil.DebugPrint(screen, fmt.Sprintf("%v", r.Player.Direction))
 
 	for x := 0; x <= game.FOV; x++ {
 
@@ -36,9 +29,9 @@ func (r *Raycaster) draw(screen *ebiten.Image) {
 			Y: -1,
 		}
 
-		dir = rotate(dir, r.direction)
+		dir = rotate(dir, r.Player.Direction)
 
-		distance := sendRay(r.Position, dir, screen)
+		distance := sendRay(r.Player.Position, dir, screen)
 
 		ySize := float32(4000) / float32(distance)
 

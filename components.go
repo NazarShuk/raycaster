@@ -1,6 +1,10 @@
 package main
 
-import "math"
+import (
+	"math"
+
+	"github.com/hajimehoshi/ebiten/v2"
+)
 
 type Vector2 struct {
 	X float32
@@ -30,3 +34,15 @@ func (v *Vector2) add(anotherVector Vector2) {
 	v.X += anotherVector.X
 	v.Y += anotherVector.Y
 }
+
+type Entity interface {
+	Start()
+	Draw(screen *ebiten.Image)
+	Update()
+}
+
+type BaseEntity struct{}
+
+func (b *BaseEntity) Start()                    {}
+func (b *BaseEntity) Update()                   {}
+func (b *BaseEntity) Draw(screen *ebiten.Image) {}
