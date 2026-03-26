@@ -17,12 +17,8 @@ type Raycaster struct {
 
 func (r *Raycaster) update() {
 	r.Position = game.Player.Position
-	if ebiten.IsKeyPressed(ebiten.KeyArrowLeft) {
-		r.direction -= 1
-	}
-	if ebiten.IsKeyPressed(ebiten.KeyArrowRight) {
-		r.direction += 1
-	}
+	r.direction = game.Player.Direction
+
 }
 
 func (r *Raycaster) draw(screen *ebiten.Image) {
@@ -30,7 +26,7 @@ func (r *Raycaster) draw(screen *ebiten.Image) {
 
 	ebitenutil.DebugPrint(screen, fmt.Sprintf("%v", r.direction))
 
-	for x := 0; x < game.FOV; x++ {
+	for x := 0; x <= game.FOV; x++ {
 
 		//wg.Go(func() {
 		progress := float32(x) / float32(game.FOV)
@@ -48,7 +44,7 @@ func (r *Raycaster) draw(screen *ebiten.Image) {
 
 		brightness := max(255-distance*2, 0)
 
-		vector.FillRect(screen, progress*360, (240/2)-ySize/2, 2, ySize, color.RGBA{0, uint8(brightness), 0, 255}, false)
+		vector.FillRect(screen, progress*360, (240/2)-ySize/2, 1, ySize, color.RGBA{0, uint8(brightness), 0, 255}, false)
 		//})
 
 	}

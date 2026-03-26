@@ -8,8 +8,9 @@ import (
 )
 
 type Player struct {
-	Position Vector2
-	Size     Vector2
+	Position  Vector2
+	Size      Vector2
+	Direction float32
 }
 
 func (p *Player) draw(screen *ebiten.Image) {
@@ -17,19 +18,33 @@ func (p *Player) draw(screen *ebiten.Image) {
 }
 
 func (p *Player) update() {
+
+	if ebiten.IsKeyPressed(ebiten.KeyArrowLeft) {
+		p.Direction -= 1
+	}
+	if ebiten.IsKeyPressed(ebiten.KeyArrowRight) {
+		p.Direction += 1
+	}
+
+	movementChange := Vector2{}
+
 	if ebiten.IsKeyPressed(ebiten.KeyW) {
-		p.Position.Y -= 1
+		movementChange.Y = -1
 	}
 
 	if ebiten.IsKeyPressed(ebiten.KeyS) {
-		p.Position.Y += 1
+		movementChange.Y = 1
 	}
 
 	if ebiten.IsKeyPressed(ebiten.KeyD) {
-		p.Position.X += 1
+		movementChange.X = 1
 	}
 
 	if ebiten.IsKeyPressed(ebiten.KeyA) {
-		p.Position.X -= 1
+		movementChange.X = -1
 	}
+
+	movementChange = rotate(movementChange, p.Direction)
+
+	p.Position.add(movementChange)
 }

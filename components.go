@@ -25,3 +25,8 @@ func rotate(v Vector2, degrees float32) Vector2 {
 		Y: v.X*sin + v.Y*cos,
 	}
 }
+
+func (v *Vector2) add(anotherVector Vector2) {
+	v.X += anotherVector.X
+	v.Y += anotherVector.Y
+}

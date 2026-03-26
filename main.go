@@ -44,7 +44,7 @@ func main() {
 	game.Player.Size.Y = 16
 	game.Player.Position.X = 320 / 2
 	game.Player.Position.Y = 240 / 2
-	game.FOV = 120
+	game.FOV = 360
 
 	createWalls()
 
