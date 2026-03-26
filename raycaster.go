@@ -2,16 +2,28 @@ package main
 
 import (
 	"fmt"
-	"image/color"
+	"image"
+	"log"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
-	"github.com/hajimehoshi/ebiten/v2/vector"
 )
 
 type Raycaster struct {
 	BaseEntity
 	Player *Player
+}
+
+var wallImage *ebiten.Image
+
+func (r *Raycaster) Start() {
+	img, _, err := ebitenutil.NewImageFromFile("wall.png")
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(img.Bounds())
+	fmt.Println(img.Bounds().Dx())
+	wallImage = img
 }
 
 func (r *Raycaster) Draw(screen *ebiten.Image) {
@@ -33,9 +45,29 @@ func (r *Raycaster) Draw(screen *ebiten.Image) {
 
 		ySize := float32(4000) / float32(ray.Distance)
 
-		brightness := max(255-ray.Distance*2, 0)
+		brightness := max(float32(255-ray.Distance*2)/255, 0)
 
-		vector.FillRect(screen, progress*360, (240/2)-ySize/2, 1, ySize, color.RGBA{0, uint8(brightness), 0, 255}, false)
+		wrappedX := wrap(int(ray.RelativePosition.X), 0, wallImage.Bounds().Dx()-1)
+
+		slice := ebiten.NewImageFromImage(wallImage.SubImage(image.Rectangle{
+			image.Point{
+				X: wrappedX,
+				Y: 0,
+			},
+			image.Point{
+				X: wrappedX + 1,
+				Y: wallImage.Bounds().Dy(),
+			},
+		}))
+		options := ebiten.DrawImageOptions{}
+		scaleY := float64(ySize) / float64(slice.Bounds().Dy())
+
+		options.GeoM.Scale(1, scaleY)
+		options.GeoM.Translate(float64(progress*360), float64((240/2)-ySize/2))
+		options.Filter = ebiten.FilterNearest
+		options.ColorScale.Scale(float32(brightness), float32(brightness), float32(brightness), 1)
+
+		screen.DrawImage(slice, &options)
 
 	}
 }
@@ -89,4 +121,14 @@ RayLoop:
 		Wall:             overlapWall,
 		RelativePosition: result.RelativePosition,
 	}
+}
+
+func wrap(n, min, max int) int {
+	rangeSize := max - min + 1
+	if rangeSize <= 0 {
+		return min // or panic/error depending on your use case
+	}
+
+	// Normalize n into the range
+	return ((n-min)%rangeSize+rangeSize)%rangeSize + min
 }
