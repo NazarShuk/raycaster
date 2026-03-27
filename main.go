@@ -11,6 +11,8 @@ type Game struct {
 	Entities []Entity
 
 	FOV int
+
+	MainRaycaster *Raycaster
 }
 
 var game = &Game{}
@@ -43,6 +45,7 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeigh
 func main() {
 
 	ebiten.SetCursorMode(ebiten.CursorModeCaptured)
+	createWalls()
 
 	player := &Player{}
 
@@ -52,10 +55,9 @@ func main() {
 	player.Position.Y = 240 / 2
 
 	spawnEntity(player)
+	spawnEntity(&Chaser{})
 
 	game.FOV = 360
-
-	createWalls()
 
 	ebiten.SetWindowSize(640, 480)
 	ebiten.SetWindowTitle("Game")

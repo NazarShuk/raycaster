@@ -17,6 +17,8 @@ type Raycaster struct {
 var wallImage *ebiten.Image
 
 func (r *Raycaster) Start() {
+	game.MainRaycaster = r
+
 	img, _, err := ebitenutil.NewImageFromFile("wall.png")
 	if err != nil {
 		log.Fatal(err)
