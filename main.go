@@ -17,11 +17,15 @@ type Game struct {
 	MainRaycaster *Raycaster
 
 	DrawCalls []DrawCall
+
+	Time int
 }
 
 var game = &Game{}
 
 func (g *Game) Update() error {
+
+	g.Time += 1
 
 	for _, entity := range game.Entities {
 		entity.Update()
@@ -65,6 +69,12 @@ func main() {
 	player.Position.Y = 240 / 2
 
 	spawnEntity(player)
+	spawnEntity(&Book{
+		StartPos: Vector2{
+			320 / 2,
+			240 / 2,
+		},
+	})
 	//spawnEntity(&Chaser{})
 
 	game.FOV = 360

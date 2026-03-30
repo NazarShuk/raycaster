@@ -7,25 +7,26 @@ import (
 type BaseNPC struct {
 	BaseEntity
 
-	Position Vector2
-	Sprite   *ebiten.Image
+	Position     Vector2
+	Sprite       *ebiten.Image
+	HeightOffset float32
 }
 
 type BaseNPCDrawCall struct {
 	DrawCall
 
-	Sprite  *ebiten.Image
+	NPC     *BaseNPC
 	screenX float32
 	screenY float32
 	scale   float32
 }
 
 func (d *BaseNPCDrawCall) Draw(screen *ebiten.Image) {
-	if d.Sprite == nil {
+	if d.NPC.Sprite == nil {
 		return
 	}
 
-	w, h := d.Sprite.Bounds().Dx(), d.Sprite.Bounds().Dy()
+	w, h := d.NPC.Sprite.Bounds().Dx(), d.NPC.Sprite.Bounds().Dy()
 
 	op := &ebiten.DrawImageOptions{}
 
@@ -33,9 +34,9 @@ func (d *BaseNPCDrawCall) Draw(screen *ebiten.Image) {
 	scaleY := float64(d.scale) / float64(h)
 	op.GeoM.Scale(scaleX, scaleY)
 
-	op.GeoM.Translate(float64(d.screenX)-float64(d.scale)/2, float64(d.screenY))
+	op.GeoM.Translate(float64(d.screenX)-float64(d.scale)/2, float64(d.screenY)+float64(d.NPC.HeightOffset))
 
-	screen.DrawImage(d.Sprite, op)
+	screen.DrawImage(d.NPC.Sprite, op)
 }
 
 func (d *BaseNPCDrawCall) GetDepth() int {
@@ -59,7 +60,7 @@ func (c *BaseNPC) Draw(screen *ebiten.Image) {
 	screenY := float32(480)/4 - scale/2
 
 	game.DrawCalls = append(game.DrawCalls, &BaseNPCDrawCall{
-		Sprite:  c.Sprite,
+		NPC:     c,
 		screenX: screenX,
 		screenY: screenY,
 		scale:   scale,
