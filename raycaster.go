@@ -28,6 +28,20 @@ func (r *Raycaster) Start() {
 	wallImage = img
 }
 
+type WallDrawCall struct {
+	Slice   *ebiten.Image
+	Options ebiten.DrawImageOptions
+	Depth   int
+}
+
+func (w *WallDrawCall) Draw(screen *ebiten.Image) {
+	screen.DrawImage(w.Slice, &w.Options)
+}
+
+func (w *WallDrawCall) GetDepth() int {
+	return w.Depth
+}
+
 func (r *Raycaster) Draw(screen *ebiten.Image) {
 
 	ebitenutil.DebugPrint(screen, fmt.Sprintf("%v", r.Player.Direction))
@@ -51,16 +65,10 @@ func (r *Raycaster) Draw(screen *ebiten.Image) {
 
 		wrappedX := wrap(int(ray.RelativePosition.X), 0, wallImage.Bounds().Dx()-1)
 
-		slice := ebiten.NewImageFromImage(wallImage.SubImage(image.Rectangle{
-			image.Point{
-				X: wrappedX,
-				Y: 0,
-			},
-			image.Point{
-				X: wrappedX + 1,
-				Y: wallImage.Bounds().Dy(),
-			},
-		}))
+		slice := wallImage.SubImage(image.Rectangle{
+			Min: image.Point{X: wrappedX, Y: 0},
+			Max: image.Point{X: wrappedX + 1, Y: wallImage.Bounds().Dy()},
+		}).(*ebiten.Image)
 		options := ebiten.DrawImageOptions{}
 		scaleY := float64(ySize) / float64(slice.Bounds().Dy())
 
@@ -69,8 +77,8 @@ func (r *Raycaster) Draw(screen *ebiten.Image) {
 		options.Filter = ebiten.FilterNearest
 		options.ColorScale.Scale(float32(brightness), float32(brightness), float32(brightness), 1)
 
-		screen.DrawImage(slice, &options)
-
+		//screen.DrawImage(slice, &options)
+		game.DrawCalls = append(game.DrawCalls, &WallDrawCall{slice, options, ray.Distance})
 	}
 }
 

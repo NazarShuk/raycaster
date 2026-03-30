@@ -1,7 +1,9 @@
 package main
 
 import (
+	"cmp"
 	"log"
+	"slices"
 
 	"github.com/hajimehoshi/ebiten/v2"
 )
@@ -13,6 +15,8 @@ type Game struct {
 	FOV int
 
 	MainRaycaster *Raycaster
+
+	DrawCalls []DrawCall
 }
 
 var game = &Game{}
@@ -28,12 +32,18 @@ func (g *Game) Update() error {
 
 func (g *Game) Draw(screen *ebiten.Image) {
 
+	g.DrawCalls = g.DrawCalls[:0]
+
 	for _, entity := range game.Entities {
 		entity.Draw(screen)
 	}
 
-	for i := 0; i < len(game.Walls); i++ {
-		//game.Walls[i].draw(screen)
+	slices.SortFunc(g.DrawCalls, func(a, b DrawCall) int {
+		return cmp.Compare(b.GetDepth(), a.GetDepth())
+	})
+
+	for _, drawCall := range g.DrawCalls {
+		drawCall.Draw(screen)
 	}
 
 }
@@ -55,7 +65,12 @@ func main() {
 	player.Position.Y = 240 / 2
 
 	spawnEntity(player)
-	spawnEntity(&Chaser{})
+	spawnEntity(&Chaser{
+		Position: Vector2{
+			X: -10,
+			Y: 0,
+		},
+	})
 
 	game.FOV = 360
 

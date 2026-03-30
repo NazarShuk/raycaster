@@ -59,6 +59,17 @@ func (v *Vector2) add(anotherVector Vector2) {
 	v.Y += anotherVector.Y
 }
 
+func (v *Vector2) lerp(b Vector2, t float32) Vector2 {
+	return Vector2{
+		X: lerp(v.X, b.X, t),
+		Y: lerp(v.Y, b.Y, t),
+	}
+}
+
+func lerp(a float32, b float32, t float32) float32 {
+	return a + (b-a)*t
+}
+
 type Entity interface {
 	Start()
 	Draw(screen *ebiten.Image)
@@ -70,3 +81,8 @@ type BaseEntity struct{}
 func (b *BaseEntity) Start()                    {}
 func (b *BaseEntity) Update()                   {}
 func (b *BaseEntity) Draw(screen *ebiten.Image) {}
+
+type DrawCall interface {
+	Draw(screen *ebiten.Image)
+	GetDepth() int
+}
