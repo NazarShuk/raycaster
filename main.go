@@ -65,7 +65,7 @@ func main() {
 	player.Position.Y = 240 / 2
 
 	spawnEntity(player)
-	spawnEntity(&Chaser{})
+	//spawnEntity(&Chaser{})
 
 	game.FOV = 360
 

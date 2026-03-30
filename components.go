@@ -14,6 +14,7 @@ type Vector2 struct {
 type OverlapResult struct {
 	IsOverlapping    bool
 	RelativePosition Vector2
+	HitSide          int // 0 = top/bottom (use X), 1 = left/right (use Y)
 }
 
 func isOverlapping(sourcePos Vector2, sourceSize Vector2, comparePos Vector2, compareSize Vector2) bool {
@@ -30,18 +31,34 @@ func checkOverlap(sourcePos Vector2, sourceSize Vector2, comparePos Vector2, com
 		sourcePos.Y+sourceSize.Y > comparePos.Y
 
 	var relativePos Vector2
+	var hitSide int
 
 	if isOverlapping {
 		relativePos.X = sourcePos.X - comparePos.X
 		relativePos.Y = sourcePos.Y - comparePos.Y
+
+		overlapX := min(
+			(sourcePos.X+sourceSize.X)-comparePos.X,
+			(comparePos.X+compareSize.X)-sourcePos.X,
+		)
+		overlapY := min(
+			(sourcePos.Y+sourceSize.Y)-comparePos.Y,
+			(comparePos.Y+compareSize.Y)-sourcePos.Y,
+		)
+
+		if overlapX < overlapY {
+			hitSide = 1
+		} else {
+			hitSide = 0
+		}
 	}
 
 	return OverlapResult{
 		IsOverlapping:    isOverlapping,
 		RelativePosition: relativePos,
+		HitSide:          hitSide,
 	}
 }
-
 func rotate(v Vector2, degrees float32) Vector2 {
 	angle := degrees * math.Pi / 180
 

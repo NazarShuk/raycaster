@@ -63,7 +63,14 @@ func (r *Raycaster) Draw(screen *ebiten.Image) {
 
 		brightness := max(float32(255-ray.Distance*2)/255, 0)
 
-		wrappedX := wrap(int(ray.RelativePosition.X), 0, wallImage.Bounds().Dx()-1)
+		var texU float32
+		if ray.HitSide == 0 {
+			texU = ray.RelativePosition.X
+		} else {
+			texU = ray.RelativePosition.Y
+		}
+
+		wrappedX := wrap(int(texU), 0, wallImage.Bounds().Dx()-1)
 
 		slice := wallImage.SubImage(image.Rectangle{
 			Min: image.Point{X: wrappedX, Y: 0},
@@ -87,6 +94,7 @@ type RayResult struct {
 	Wall     *Wall
 
 	RelativePosition Vector2
+	HitSide          int
 }
 
 func sendRay(startPos Vector2, direction Vector2, screen *ebiten.Image) RayResult {
@@ -130,6 +138,7 @@ RayLoop:
 		Distance:         distance,
 		Wall:             overlapWall,
 		RelativePosition: result.RelativePosition,
+		HitSide:          result.HitSide,
 	}
 }
 
